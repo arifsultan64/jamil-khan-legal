@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-navy-950: #091529;
+  --color-navy-900: #0F2342;
+  --color-navy-800: #18345E;
+  --color-navy-700: #23477D;
+  --color-forest-900: #103628;
+  --color-forest-800: #164937;
+  --color-gold-600: #9E7B3B;
+  --color-gold-500: #B38D47;
+  --color-paper-50: #FBF9F5;
+  --color-paper-100: #F4F0E8;
+  --color-ink-900: #141A24;
+  --color-ink-700: #334155;
+  --color-ink-500: #64748B;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, .font-display {
+    text-wrap: balance;
+  }
+}
+
+/* Academic Prose Typography (Articles, Research Papers, Judgments) */
+.legal-prose {
+  font-family: var(--font-sans);
+  color: #1E293B;
+  line-height: 1.78;
+  font-size: 1.035rem;
+}
+
+.legal-prose h1 {
+  font-family: var(--font-serif);
+  font-size: 2.15rem;
+  font-weight: 700;
+  color: #0F2342;
+  margin-top: 2.25rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.legal-prose h2 {
+  font-family: var(--font-serif);
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: #0F2342;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid #E2E8F0;
+  line-height: 1.25;
+}
+
+.legal-prose h3 {
+  font-family: var(--font-serif);
+  font-size: 1.32rem;
+  font-weight: 600;
+  color: #164937;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.legal-prose h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #0F2342;
+  margin-top: 1.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.legal-prose p {
+  margin-bottom: 1.15rem;
+}
+
+.legal-prose ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.15rem;
+}
+
+.legal-prose ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.15rem;
+}
+
+.legal-prose li {
+  margin-bottom: 0.35rem;
+}
+
+.legal-prose blockquote {
+  margin: 1.75rem 0;
+  padding: 1.25rem 1.75rem;
+  border-top: 1px solid #CBD5E1;
+  border-bottom: 1px solid #CBD5E1;
+  background-color: #F8FAFC;
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-style: italic;
+  color: #0F2342;
+}
+
+.legal-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.92rem;
+}
+
+.legal-prose th,
+.legal-prose td {
+  border: 1px solid #CBD5E1;
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.legal-prose th {
+  background-color: #F1F5F9;
+  font-weight: 600;
+  color: #0F2342;
+}
+
+.legal-prose a {
+  color: #164937;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.legal-prose hr {
+  border: 0;
+  border-top: 1px solid #E2E8F0;
+  margin: 2rem 0;
+}
+
+.legal-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+  margin: 1.5rem 0;
+}
+
+/* TipTap Editor Canvas */
+.tiptap {
+  outline: none;
+  min-height: 360px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #94A3B8;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Print Stylesheet */
+@media print {
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+
+  .legal-prose {
+    font-size: 11pt;
+    line-height: 1.6;
+  }
+}

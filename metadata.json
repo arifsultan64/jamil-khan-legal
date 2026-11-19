@@ -1,0 +1,8 @@
+{
+  "name": "Remix Jameel Khan | Legal Research \u0026 Publications",
+  "description": "A professional digital platform for legal research, case laws, judgments, articles, academic papers, lectures, and educational resources by Jameel Khan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

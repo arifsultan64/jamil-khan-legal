@@ -1,0 +1,514 @@
+{
+  "entities": {
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized portal administrator record",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "role": { "type": "string", "enum": ["super_admin"] },
+        "inactivityTimeoutMinutes": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "createdAt", "updatedAt"]
+    },
+    "AuthorProfile": {
+      "title": "AuthorProfile",
+      "description": "Public professional biography and credentials for Jameel Khan",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "headline": { "type": "string", "maxLength": 240 },
+        "biography": { "type": "string", "maxLength": 20000 },
+        "academicBackground": { "type": "string", "maxLength": 10000 },
+        "professionalExperience": { "type": "string", "maxLength": 10000 },
+        "judicialCareer": { "type": "string", "maxLength": 10000 },
+        "researchInterests": { "type": "array" },
+        "academicContributions": { "type": "string", "maxLength": 10000 },
+        "achievements": { "type": "string", "maxLength": 10000 },
+        "profileImageUrl": { "type": "string", "maxLength": 1000 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "fullName", "headline", "biography", "updatedAt"]
+    },
+    "Article": {
+      "title": "Article",
+      "description": "Published or draft legal article",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 240 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 200, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "description": { "type": "string", "maxLength": 1000 },
+        "content": { "type": "string", "maxLength": 250000 },
+        "footnotes": { "type": "string", "maxLength": 50000 },
+        "references": { "type": "string", "maxLength": 50000 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "maxLength": 120 },
+        "tags": { "type": "array" },
+        "keywords": { "type": "array" },
+        "featuredImage": { "type": "string", "maxLength": 1000 },
+        "attachments": { "type": "array" },
+        "relatedIds": { "type": "array" },
+        "readingTimeMinutes": { "type": "number" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published", "unpublished", "deleted"] },
+        "isFeatured": { "type": "boolean" },
+        "isDemo": { "type": "boolean" },
+        "seoTitle": { "type": "string", "maxLength": 160 },
+        "seoDescription": { "type": "string", "maxLength": 320 },
+        "viewCount": { "type": "number" },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" },
+        "scheduledAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "description", "content", "categoryId", "authorId", "authorName", "status", "isFeatured", "createdAt", "updatedAt"]
+    },
+    "ResearchPaper": {
+      "title": "ResearchPaper",
+      "description": "Academic legal research paper with structured sections",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 260 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 200, "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "abstract": { "type": "string", "maxLength": 5000 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "content": { "type": "string", "maxLength": 250000 },
+        "introduction": { "type": "string", "maxLength": 50000 },
+        "methodology": { "type": "string", "maxLength": 50000 },
+        "analysis": { "type": "string", "maxLength": 120000 },
+        "findings": { "type": "string", "maxLength": 50000 },
+        "conclusion": { "type": "string", "maxLength": 50000 },
+        "bibliography": { "type": "string", "maxLength": 50000 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "maxLength": 120 },
+        "tags": { "type": "array" },
+        "keywords": { "type": "array" },
+        "featuredImage": { "type": "string", "maxLength": 1000 },
+        "pdfUrl": { "type": "string", "maxLength": 1000 },
+        "attachments": { "type": "array" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published", "unpublished", "deleted"] },
+        "isFeatured": { "type": "boolean" },
+        "isDemo": { "type": "boolean" },
+        "seoTitle": { "type": "string", "maxLength": 160 },
+        "seoDescription": { "type": "string", "maxLength": 320 },
+        "viewCount": { "type": "number" },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "abstract", "categoryId", "authorId", "authorName", "status", "isFeatured", "createdAt", "updatedAt"]
+    },
+    "CaseLaw": {
+      "title": "CaseLaw",
+      "description": "Structured case law record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 260 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "caseNumber": { "type": "string", "maxLength": 120 },
+        "courtName": { "type": "string", "maxLength": 180 },
+        "citation": { "type": "string", "maxLength": 160 },
+        "year": { "type": "number" },
+        "benchDetails": { "type": "string", "maxLength": 400 },
+        "subjectMatter": { "type": "string", "maxLength": 500 },
+        "legalPrinciples": { "type": "string", "maxLength": 40000 },
+        "statutoryProvisions": { "type": "array" },
+        "headnotes": { "type": "string", "maxLength": 40000 },
+        "observations": { "type": "string", "maxLength": 40000 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "content": { "type": "string", "maxLength": 120000 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "maxLength": 120 },
+        "tags": { "type": "array" },
+        "pdfUrl": { "type": "string", "maxLength": 1000 },
+        "externalSourceUrl": { "type": "string", "maxLength": 1000 },
+        "relatedJudgments": { "type": "array" },
+        "attachments": { "type": "array" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published", "unpublished", "deleted"] },
+        "isFeatured": { "type": "boolean" },
+        "isDemo": { "type": "boolean" },
+        "seoTitle": { "type": "string", "maxLength": 160 },
+        "seoDescription": { "type": "string", "maxLength": 320 },
+        "viewCount": { "type": "number" },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "courtName", "year", "categoryId", "authorId", "authorName", "status", "isFeatured", "createdAt", "updatedAt"]
+    },
+    "Judgment": {
+      "title": "Judgment",
+      "description": "Judgment repository document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 260 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "caseNumber": { "type": "string", "maxLength": 120 },
+        "court": { "type": "string", "maxLength": 180 },
+        "judgmentDate": { "type": "string", "maxLength": 40 },
+        "year": { "type": "number" },
+        "citation": { "type": "string", "maxLength": 160 },
+        "subject": { "type": "string", "maxLength": 400 },
+        "description": { "type": "string", "maxLength": 3000 },
+        "legalIssues": { "type": "string", "maxLength": 40000 },
+        "finalDecision": { "type": "string", "maxLength": 20000 },
+        "content": { "type": "string", "maxLength": 150000 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "maxLength": 120 },
+        "tags": { "type": "array" },
+        "pdfUrl": { "type": "string", "maxLength": 1000 },
+        "relatedCaseLaws": { "type": "array" },
+        "attachments": { "type": "array" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published", "unpublished", "deleted"] },
+        "isFeatured": { "type": "boolean" },
+        "isDemo": { "type": "boolean" },
+        "seoTitle": { "type": "string", "maxLength": 160 },
+        "seoDescription": { "type": "string", "maxLength": 320 },
+        "viewCount": { "type": "number" },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "court", "categoryId", "authorId", "authorName", "status", "isFeatured", "createdAt", "updatedAt"]
+    },
+    "Presentation": {
+      "title": "Presentation",
+      "description": "Legal presentation or slide deck",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 240 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 3000 },
+        "topic": { "type": "string", "maxLength": 200 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "maxLength": 120 },
+        "tags": { "type": "array" },
+        "featuredImage": { "type": "string", "maxLength": 1000 },
+        "fileUrl": { "type": "string", "maxLength": 1000 },
+        "fileName": { "type": "string", "maxLength": 260 },
+        "fileType": { "type": "string", "maxLength": 60 },
+        "fileSizeBytes": { "type": "number" },
+        "attachments": { "type": "array" },
+        "relatedArticles": { "type": "array" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published", "unpublished", "deleted"] },
+        "isFeatured": { "type": "boolean" },
+        "isDemo": { "type": "boolean" },
+        "viewCount": { "type": "number" },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "description", "categoryId", "authorId", "authorName", "status", "isFeatured", "createdAt", "updatedAt"]
+    },
+    "Lecture": {
+      "title": "Lecture",
+      "description": "Lecture notes, seminar papers, and workshop resources",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 240 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "resourceKind": { "type": "string", "enum": ["lecture_notes", "training_material", "seminar_paper", "workshop_resource", "legal_guideline", "academic_handout"] },
+        "description": { "type": "string", "maxLength": 3000 },
+        "content": { "type": "string", "maxLength": 150000 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "maxLength": 120 },
+        "tags": { "type": "array" },
+        "featuredImage": { "type": "string", "maxLength": 1000 },
+        "fileUrl": { "type": "string", "maxLength": 1000 },
+        "attachments": { "type": "array" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published", "unpublished", "deleted"] },
+        "isFeatured": { "type": "boolean" },
+        "isDemo": { "type": "boolean" },
+        "viewCount": { "type": "number" },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "resourceKind", "categoryId", "authorId", "authorName", "status", "isFeatured", "createdAt", "updatedAt"]
+    },
+    "EducationalResource": {
+      "title": "EducationalResource",
+      "description": "Legal educational guidelines and downloadable handouts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "title": { "type": "string", "minLength": 2, "maxLength": 240 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "resourceKind": { "type": "string", "enum": ["lecture_notes", "training_material", "seminar_paper", "workshop_resource", "legal_guideline", "academic_handout"] },
+        "description": { "type": "string", "maxLength": 3000 },
+        "content": { "type": "string", "maxLength": 150000 },
+        "categoryId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "categoryName": { "type": "string", "maxLength": 120 },
+        "tags": { "type": "array" },
+        "fileUrl": { "type": "string", "maxLength": 1000 },
+        "attachments": { "type": "array" },
+        "authorId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "authorName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "status": { "type": "string", "enum": ["draft", "scheduled", "published", "unpublished", "deleted"] },
+        "isFeatured": { "type": "boolean" },
+        "isDemo": { "type": "boolean" },
+        "viewCount": { "type": "number" },
+        "downloadCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "slug", "resourceKind", "categoryId", "authorId", "authorName", "status", "isFeatured", "createdAt", "updatedAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Legal taxonomy category",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "slug": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 600 },
+        "icon": { "type": "string", "maxLength": 60 },
+        "displayOrder": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "slug", "displayOrder", "isActive", "createdAt", "updatedAt"]
+    },
+    "Tag": {
+      "title": "Tag",
+      "description": "Content keyword tag",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "slug": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "usageCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "slug", "createdAt"]
+    },
+    "MediaAsset": {
+      "title": "MediaAsset",
+      "description": "Uploaded PDF, document, presentation, or image metadata",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "fileName": { "type": "string", "minLength": 1, "maxLength": 260 },
+        "storagePath": { "type": "string", "maxLength": 500 },
+        "downloadUrl": { "type": "string", "maxLength": 1000 },
+        "mimeType": { "type": "string", "maxLength": 120 },
+        "extension": { "type": "string", "maxLength": 20 },
+        "sizeBytes": { "type": "number" },
+        "visibility": { "type": "string", "enum": ["public", "private"] },
+        "uploadedBy": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "fileName", "downloadUrl", "mimeType", "sizeBytes", "visibility", "uploadedBy", "createdAt"]
+    },
+    "Subscriber": {
+      "title": "Subscriber",
+      "description": "Newsletter subscriber email record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "email": { "type": "string", "format": "email", "maxLength": 200 },
+        "status": { "type": "string", "enum": ["active", "unsubscribed"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "status", "createdAt"]
+    },
+    "ContactMessage": {
+      "title": "ContactMessage",
+      "description": "Visitor inquiry submitted via contact form",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "senderName": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "senderEmail": { "type": "string", "format": "email", "maxLength": 200 },
+        "subject": { "type": "string", "minLength": 2, "maxLength": 200 },
+        "message": { "type": "string", "minLength": 10, "maxLength": 5000 },
+        "status": { "type": "string", "enum": ["unread", "read", "archived"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "senderName", "senderEmail", "subject", "message", "status", "createdAt"]
+    },
+    "AnalyticsEvent": {
+      "title": "AnalyticsEvent",
+      "description": "Privacy-conscious publication analytics record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "eventType": { "type": "string", "enum": ["page_view", "publication_view", "file_download", "search_query"] },
+        "entityType": { "type": "string", "maxLength": 60 },
+        "entityId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 260 },
+        "searchTerm": { "type": "string", "maxLength": 160 },
+        "referrer": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "eventType", "createdAt"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Admin security and publishing audit trail",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "actorUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 200 },
+        "action": { "type": "string", "maxLength": 120 },
+        "targetCollection": { "type": "string", "maxLength": 80 },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "summary": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "actorUid", "action", "summary", "createdAt"]
+    },
+    "ContentRevision": {
+      "title": "ContentRevision",
+      "description": "Snapshot revision for accidental edit recovery",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "collectionName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "documentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 260 },
+        "snapshot": { "type": "object" },
+        "savedByUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "collectionName", "documentId", "snapshot", "savedByUid", "createdAt"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Global portal branding, homepage ordering, legal notices, and SEO defaults",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "siteName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "tagline": { "type": "string", "maxLength": 200 },
+        "heroTitle": { "type": "string", "maxLength": 200 },
+        "heroSubtitle": { "type": "string", "maxLength": 600 },
+        "welcomeMessage": { "type": "string", "maxLength": 2000 },
+        "logoUrl": { "type": "string", "maxLength": 1000 },
+        "faviconUrl": { "type": "string", "maxLength": 1000 },
+        "contactEmail": { "type": "string", "maxLength": 200 },
+        "contactOffice": { "type": "string", "maxLength": 400 },
+        "socialLinks": { "type": "object" },
+        "homepageSections": { "type": "array" },
+        "newsletterEnabled": { "type": "boolean" },
+        "contactFormEnabled": { "type": "boolean" },
+        "maxUploadSizeMb": { "type": "number" },
+        "defaultSeoTitle": { "type": "string", "maxLength": 160 },
+        "defaultSeoDescription": { "type": "string", "maxLength": 320 },
+        "footerText": { "type": "string", "maxLength": 600 },
+        "privacyPolicy": { "type": "string", "maxLength": 30000 },
+        "disclaimer": { "type": "string", "maxLength": 10000 },
+        "termsAndConditions": { "type": "string", "maxLength": 30000 },
+        "inactivityTimeoutMinutes": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "siteName", "tagline", "newsletterEnabled", "contactFormEnabled", "maxUploadSizeMb", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized portal administrators"
+    },
+    "/profiles/{profileId}": {
+      "schema": { "$ref": "#/entities/AuthorProfile" },
+      "description": "Public author profile for Jameel Khan"
+    },
+    "/articles/{articleId}": {
+      "schema": { "$ref": "#/entities/Article" },
+      "description": "Legal articles collection"
+    },
+    "/research_papers/{paperId}": {
+      "schema": { "$ref": "#/entities/ResearchPaper" },
+      "description": "Academic research papers collection"
+    },
+    "/case_laws/{caseLawId}": {
+      "schema": { "$ref": "#/entities/CaseLaw" },
+      "description": "Structured case law database"
+    },
+    "/judgments/{judgmentId}": {
+      "schema": { "$ref": "#/entities/Judgment" },
+      "description": "Judgment repository"
+    },
+    "/presentations/{presentationId}": {
+      "schema": { "$ref": "#/entities/Presentation" },
+      "description": "Presentation decks and slides"
+    },
+    "/lectures/{lectureId}": {
+      "schema": { "$ref": "#/entities/Lecture" },
+      "description": "Lecture notes and seminar papers"
+    },
+    "/resources/{resourceId}": {
+      "schema": { "$ref": "#/entities/EducationalResource" },
+      "description": "Educational guidelines and handouts"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Legal taxonomy categories"
+    },
+    "/tags/{tagId}": {
+      "schema": { "$ref": "#/entities/Tag" },
+      "description": "Content tags"
+    },
+    "/media/{mediaId}": {
+      "schema": { "$ref": "#/entities/MediaAsset" },
+      "description": "Media and document upload registry"
+    },
+    "/subscribers/{subscriberId}": {
+      "schema": { "$ref": "#/entities/Subscriber" },
+      "description": "Newsletter subscribers (admin-only read)"
+    },
+    "/contact_messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ContactMessage" },
+      "description": "Contact form submissions (admin-only read)"
+    },
+    "/analytics/{eventId}": {
+      "schema": { "$ref": "#/entities/AnalyticsEvent" },
+      "description": "Privacy-conscious view, download, and search analytics"
+    },
+    "/activity_logs/{logId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Admin security and publishing audit logs"
+    },
+    "/revisions/{revisionId}": {
+      "schema": { "$ref": "#/entities/ContentRevision" },
+      "description": "Content revision snapshots for recovery"
+    },
+    "/site_settings/{settingId}": {
+      "schema": { "$ref": "#/entities/SiteSettings" },
+      "description": "Global site configuration and legal pages"
+    }
+  }
+}

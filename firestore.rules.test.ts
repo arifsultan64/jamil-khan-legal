@@ -1,0 +1,107 @@
+/**
+ * Firestore Security Rules Test Suite (Phase 0 Verification Blueprint)
+ * Run with Firebase Emulator Suite (`@firebase/rules-unit-testing`) when testing locally.
+ * Covers all 12 "Dirty Dozen" adversarial payloads defined in security_spec.md.
+ */
+
+export const DIRTY_DOZEN_TEST_CASES = [
+  {
+    id: 'DD-01',
+    name: 'Unauthenticated Draft Read',
+    collection: 'articles',
+    operation: 'get',
+    auth: null,
+    targetState: { status: 'draft' },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-02',
+    name: 'List Query Without Published Filter',
+    collection: 'articles',
+    operation: 'list',
+    auth: null,
+    query: 'unfiltered',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-03',
+    name: 'Self-Privilege Escalation into /admins',
+    collection: 'admins',
+    operation: 'create',
+    auth: { uid: 'attacker-1', email: 'attacker@example.com', email_verified: true },
+    payload: { uid: 'attacker-1', role: 'super_admin', email: 'attacker@example.com', displayName: 'Attacker' },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-04',
+    name: 'Unverified Email Spoofing Admin Account',
+    collection: 'articles',
+    operation: 'create',
+    auth: { uid: 'spoof-1', email: 'ayeshakhania123@gmail.com', email_verified: false },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-05',
+    name: 'Shadow Ghost Field Injection',
+    collection: 'contact_messages',
+    operation: 'create',
+    auth: null,
+    payload: { id: 'msg1', senderName: 'Test', senderEmail: 't@example.com', subject: 'Hello', message: 'Valid length message body', status: 'unread', isVerified: true },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-06',
+    name: 'Path / ID Poisoning (>128 chars or invalid symbols)',
+    collection: 'subscribers',
+    operation: 'create',
+    docId: 'bad/../id$' + 'a'.repeat(150),
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-07',
+    name: 'PII Scrape on Subscribers',
+    collection: 'subscribers',
+    operation: 'list',
+    auth: { uid: 'reader-1', email: 'reader@example.com', email_verified: true },
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-08',
+    name: 'PII Scrape on Contact Messages',
+    collection: 'contact_messages',
+    operation: 'get',
+    auth: null,
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-09',
+    name: 'Resource Exhaustion (>5000 char contact message)',
+    collection: 'contact_messages',
+    operation: 'create',
+    payloadSize: 500000,
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-10',
+    name: 'Immutable createdAt Tampering',
+    collection: 'articles',
+    operation: 'update',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-11',
+    name: 'Client-Forged Timestamp Spoofing',
+    collection: 'articles',
+    operation: 'create',
+    expected: 'PERMISSION_DENIED',
+  },
+  {
+    id: 'DD-12',
+    name: 'Private Media Exposure',
+    collection: 'media',
+    operation: 'get',
+    auth: null,
+    targetState: { visibility: 'private' },
+    expected: 'PERMISSION_DENIED',
+  },
+] as const;

@@ -1,0 +1,713 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global safety net: default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ------------------------------------------------------------------
+    // Global Primitives & Hardened Helpers
+    // ------------------------------------------------------------------
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isBootstrappedAdmin() {
+      return isVerifiedUser() && (
+        request.auth.token.email == 'ayeshakhania123@gmail.com'
+      );
+    }
+
+    function isAdmin() {
+      return isVerifiedUser() && (
+        isBootstrappedAdmin() ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidStatus(status) {
+      return status in ['draft', 'scheduled', 'published', 'unpublished', 'deleted'];
+    }
+
+    function isValidSlug(slug) {
+      return slug is string && slug.size() >= 2 && slug.size() <= 200 && slug.matches('^[a-z0-9\\-]+$');
+    }
+
+    function isValidOptionalString(data, field, maxLen) {
+      return !(field in data) || (data[field] is string && data[field].size() <= maxLen);
+    }
+
+    function isValidOptionalNumber(data, field) {
+      return !(field in data) || (data[field] is int || data[field] is float);
+    }
+
+    function isValidOptionalBool(data, field) {
+      return !(field in data) || (data[field] is bool);
+    }
+
+    function isValidBoundedList(data, field, maxItems) {
+      return !(field in data) || (
+        data[field] is list &&
+        data[field].size() <= maxItems &&
+        (data[field].size() == 0 || data[field][0] is string || data[field][0] is map)
+      );
+    }
+
+    function hasValidCommonPublicationFields(data) {
+      return data.id is string && isValidId(data.id)
+        && data.title is string && data.title.size() >= 2 && data.title.size() <= 260
+        && isValidSlug(data.slug)
+        && data.categoryId is string && data.categoryId.size() >= 1 && data.categoryId.size() <= 128
+        && data.authorId is string && data.authorId == request.auth.uid && data.authorId.size() <= 128
+        && data.authorName is string && data.authorName.size() >= 1 && data.authorName.size() <= 120
+        && data.status is string && isValidStatus(data.status)
+        && data.isFeatured is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && isValidOptionalString(data, 'categoryName', 120)
+        && isValidOptionalString(data, 'description', 3000)
+        && isValidOptionalString(data, 'content', 250000)
+        && isValidOptionalString(data, 'featuredImage', 1000)
+        && isValidOptionalString(data, 'seoTitle', 160)
+        && isValidOptionalString(data, 'seoDescription', 320)
+        && isValidOptionalBool(data, 'isDemo')
+        && isValidOptionalNumber(data, 'viewCount')
+        && isValidOptionalNumber(data, 'downloadCount')
+        && isValidBoundedList(data, 'tags', 20)
+        && isValidBoundedList(data, 'keywords', 30)
+        && isValidBoundedList(data, 'attachments', 20);
+    }
+
+    function isValidArticle(data) {
+      return hasValidCommonPublicationFields(data)
+        && data.keys().hasAll(['id', 'title', 'slug', 'description', 'content', 'categoryId', 'authorId', 'authorName', 'status', 'isFeatured', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'title', 'slug', 'description', 'content', 'footnotes', 'references',
+          'categoryId', 'categoryName', 'tags', 'keywords', 'featuredImage', 'attachments',
+          'relatedIds', 'readingTimeMinutes', 'authorId', 'authorName', 'status',
+          'isFeatured', 'isDemo', 'seoTitle', 'seoDescription', 'viewCount', 'downloadCount',
+          'createdAt', 'updatedAt', 'publishedAt', 'scheduledAt'
+        ])
+        && isValidOptionalString(data, 'footnotes', 50000)
+        && isValidOptionalString(data, 'references', 50000)
+        && isValidOptionalNumber(data, 'readingTimeMinutes')
+        && isValidBoundedList(data, 'relatedIds', 20);
+    }
+
+    function isValidResearchPaper(data) {
+      return hasValidCommonPublicationFields(data)
+        && data.abstract is string && data.abstract.size() <= 5000
+        && data.keys().hasAll(['id', 'title', 'slug', 'abstract', 'categoryId', 'authorId', 'authorName', 'status', 'isFeatured', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'title', 'slug', 'abstract', 'description', 'content', 'introduction',
+          'methodology', 'analysis', 'findings', 'conclusion', 'bibliography',
+          'categoryId', 'categoryName', 'tags', 'keywords', 'featuredImage', 'pdfUrl',
+          'attachments', 'authorId', 'authorName', 'status', 'isFeatured', 'isDemo',
+          'seoTitle', 'seoDescription', 'viewCount', 'downloadCount',
+          'createdAt', 'updatedAt', 'publishedAt', 'scheduledAt'
+        ])
+        && isValidOptionalString(data, 'introduction', 50000)
+        && isValidOptionalString(data, 'methodology', 50000)
+        && isValidOptionalString(data, 'analysis', 120000)
+        && isValidOptionalString(data, 'findings', 50000)
+        && isValidOptionalString(data, 'conclusion', 50000)
+        && isValidOptionalString(data, 'bibliography', 50000)
+        && isValidOptionalString(data, 'pdfUrl', 1000);
+    }
+
+    function isValidCaseLaw(data) {
+      return hasValidCommonPublicationFields(data)
+        && data.courtName is string && data.courtName.size() >= 2 && data.courtName.size() <= 180
+        && (data.year is int || data.year is float) && data.year >= 1800 && data.year <= 2100
+        && data.keys().hasAll(['id', 'title', 'slug', 'courtName', 'year', 'categoryId', 'authorId', 'authorName', 'status', 'isFeatured', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'title', 'slug', 'caseNumber', 'courtName', 'citation', 'year',
+          'benchDetails', 'subjectMatter', 'legalPrinciples', 'statutoryProvisions',
+          'headnotes', 'observations', 'description', 'content', 'categoryId', 'categoryName',
+          'tags', 'keywords', 'featuredImage', 'pdfUrl', 'externalSourceUrl', 'relatedJudgments',
+          'attachments', 'authorId', 'authorName', 'status', 'isFeatured', 'isDemo',
+          'seoTitle', 'seoDescription', 'viewCount', 'downloadCount',
+          'createdAt', 'updatedAt', 'publishedAt', 'scheduledAt'
+        ])
+        && isValidOptionalString(data, 'caseNumber', 120)
+        && isValidOptionalString(data, 'citation', 160)
+        && isValidOptionalString(data, 'benchDetails', 400)
+        && isValidOptionalString(data, 'subjectMatter', 500)
+        && isValidOptionalString(data, 'legalPrinciples', 40000)
+        && isValidOptionalString(data, 'headnotes', 40000)
+        && isValidOptionalString(data, 'observations', 40000)
+        && isValidOptionalString(data, 'pdfUrl', 1000)
+        && isValidOptionalString(data, 'externalSourceUrl', 1000)
+        && isValidBoundedList(data, 'statutoryProvisions', 30)
+        && isValidBoundedList(data, 'relatedJudgments', 20);
+    }
+
+    function isValidJudgment(data) {
+      return hasValidCommonPublicationFields(data)
+        && data.court is string && data.court.size() >= 2 && data.court.size() <= 180
+        && data.keys().hasAll(['id', 'title', 'slug', 'court', 'categoryId', 'authorId', 'authorName', 'status', 'isFeatured', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'title', 'slug', 'caseNumber', 'court', 'judgmentDate', 'year',
+          'citation', 'subject', 'description', 'legalIssues', 'finalDecision', 'content',
+          'categoryId', 'categoryName', 'tags', 'keywords', 'featuredImage', 'pdfUrl',
+          'relatedCaseLaws', 'attachments', 'authorId', 'authorName', 'status',
+          'isFeatured', 'isDemo', 'seoTitle', 'seoDescription', 'viewCount', 'downloadCount',
+          'createdAt', 'updatedAt', 'publishedAt', 'scheduledAt'
+        ])
+        && isValidOptionalString(data, 'caseNumber', 120)
+        && isValidOptionalString(data, 'judgmentDate', 40)
+        && isValidOptionalNumber(data, 'year')
+        && isValidOptionalString(data, 'citation', 160)
+        && isValidOptionalString(data, 'subject', 400)
+        && isValidOptionalString(data, 'legalIssues', 40000)
+        && isValidOptionalString(data, 'finalDecision', 20000)
+        && isValidOptionalString(data, 'pdfUrl', 1000)
+        && isValidBoundedList(data, 'relatedCaseLaws', 20);
+    }
+
+    function isValidPresentation(data) {
+      return hasValidCommonPublicationFields(data)
+        && data.keys().hasAll(['id', 'title', 'slug', 'description', 'categoryId', 'authorId', 'authorName', 'status', 'isFeatured', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'title', 'slug', 'description', 'content', 'topic', 'categoryId', 'categoryName',
+          'tags', 'keywords', 'featuredImage', 'fileUrl', 'fileName', 'fileType', 'fileSizeBytes',
+          'attachments', 'relatedArticles', 'authorId', 'authorName', 'status',
+          'isFeatured', 'isDemo', 'seoTitle', 'seoDescription', 'viewCount', 'downloadCount',
+          'createdAt', 'updatedAt', 'publishedAt', 'scheduledAt'
+        ])
+        && isValidOptionalString(data, 'topic', 200)
+        && isValidOptionalString(data, 'fileUrl', 1000)
+        && isValidOptionalString(data, 'fileName', 260)
+        && isValidOptionalString(data, 'fileType', 60)
+        && isValidOptionalNumber(data, 'fileSizeBytes')
+        && isValidBoundedList(data, 'relatedArticles', 20);
+    }
+
+    function isValidLectureOrResource(data) {
+      return hasValidCommonPublicationFields(data)
+        && data.resourceKind in ['lecture_notes', 'training_material', 'seminar_paper', 'workshop_resource', 'legal_guideline', 'academic_handout']
+        && data.keys().hasAll(['id', 'title', 'slug', 'resourceKind', 'categoryId', 'authorId', 'authorName', 'status', 'isFeatured', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'title', 'slug', 'resourceKind', 'description', 'content', 'categoryId', 'categoryName',
+          'tags', 'keywords', 'featuredImage', 'fileUrl', 'fileName', 'fileType', 'fileSizeBytes',
+          'attachments', 'authorId', 'authorName', 'status', 'isFeatured', 'isDemo',
+          'seoTitle', 'seoDescription', 'viewCount', 'downloadCount',
+          'createdAt', 'updatedAt', 'publishedAt', 'scheduledAt'
+        ])
+        && isValidOptionalString(data, 'fileUrl', 1000)
+        && isValidOptionalString(data, 'fileName', 260)
+        && isValidOptionalString(data, 'fileType', 60)
+        && isValidOptionalNumber(data, 'fileSizeBytes');
+    }
+
+    function isValidCategory(data) {
+      return data.id is string && isValidId(data.id)
+        && data.name is string && data.name.size() >= 2 && data.name.size() <= 120
+        && isValidSlug(data.slug)
+        && (data.displayOrder is int || data.displayOrder is float)
+        && data.isActive is bool
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp
+        && isValidOptionalString(data, 'description', 600)
+        && isValidOptionalString(data, 'icon', 60)
+        && data.keys().hasAll(['id', 'name', 'slug', 'displayOrder', 'isActive', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly(['id', 'name', 'slug', 'description', 'icon', 'displayOrder', 'isActive', 'createdAt', 'updatedAt']);
+    }
+
+    function isValidTag(data) {
+      return data.id is string && isValidId(data.id)
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 80
+        && isValidSlug(data.slug)
+        && data.createdAt is timestamp
+        && isValidOptionalNumber(data, 'usageCount')
+        && data.keys().hasAll(['id', 'name', 'slug', 'createdAt'])
+        && data.keys().hasOnly(['id', 'name', 'slug', 'usageCount', 'createdAt']);
+    }
+
+    function isValidMedia(data) {
+      return data.id is string && isValidId(data.id)
+        && data.fileName is string && data.fileName.size() >= 1 && data.fileName.size() <= 260
+        && data.downloadUrl is string && data.downloadUrl.size() <= 1000
+        && data.mimeType is string && data.mimeType.size() <= 120
+        && (data.sizeBytes is int || data.sizeBytes is float) && data.sizeBytes >= 0
+        && data.visibility in ['public', 'private']
+        && data.uploadedBy is string && data.uploadedBy == request.auth.uid
+        && data.createdAt is timestamp
+        && isValidOptionalString(data, 'storagePath', 500)
+        && isValidOptionalString(data, 'extension', 20)
+        && data.keys().hasAll(['id', 'fileName', 'downloadUrl', 'mimeType', 'sizeBytes', 'visibility', 'uploadedBy', 'createdAt'])
+        && data.keys().hasOnly(['id', 'fileName', 'storagePath', 'downloadUrl', 'mimeType', 'extension', 'sizeBytes', 'visibility', 'uploadedBy', 'createdAt']);
+    }
+
+    function isValidSubscriber(data) {
+      return data.id is string && isValidId(data.id)
+        && data.email is string && data.email.size() >= 5 && data.email.size() <= 200
+        && data.email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+        && data.status in ['active', 'unsubscribed']
+        && data.createdAt is timestamp
+        && data.keys().hasAll(['id', 'email', 'status', 'createdAt'])
+        && data.keys().hasOnly(['id', 'email', 'status', 'createdAt']);
+    }
+
+    function isValidContactMessage(data) {
+      return data.id is string && isValidId(data.id)
+        && data.senderName is string && data.senderName.size() >= 2 && data.senderName.size() <= 120
+        && data.senderEmail is string && data.senderEmail.size() >= 5 && data.senderEmail.size() <= 200
+        && data.senderEmail.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')
+        && data.subject is string && data.subject.size() >= 2 && data.subject.size() <= 200
+        && data.message is string && data.message.size() >= 10 && data.message.size() <= 5000
+        && data.status == 'unread'
+        && data.createdAt is timestamp
+        && data.keys().hasAll(['id', 'senderName', 'senderEmail', 'subject', 'message', 'status', 'createdAt'])
+        && data.keys().hasOnly(['id', 'senderName', 'senderEmail', 'subject', 'message', 'status', 'createdAt']);
+    }
+
+    function isValidAnalyticsEvent(data) {
+      return data.id is string && isValidId(data.id)
+        && data.eventType in ['page_view', 'publication_view', 'file_download', 'search_query']
+        && data.createdAt is timestamp
+        && isValidOptionalString(data, 'entityType', 60)
+        && isValidOptionalString(data, 'entityId', 128)
+        && isValidOptionalString(data, 'title', 260)
+        && isValidOptionalString(data, 'searchTerm', 160)
+        && isValidOptionalString(data, 'referrer', 300)
+        && data.keys().hasAll(['id', 'eventType', 'createdAt'])
+        && data.keys().hasOnly(['id', 'eventType', 'entityType', 'entityId', 'title', 'searchTerm', 'referrer', 'createdAt']);
+    }
+
+    function isValidProfile(data) {
+      return data.id is string && isValidId(data.id)
+        && data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 120
+        && data.headline is string && data.headline.size() <= 240
+        && data.biography is string && data.biography.size() <= 20000
+        && data.updatedAt is timestamp
+        && isValidOptionalString(data, 'academicBackground', 10000)
+        && isValidOptionalString(data, 'professionalExperience', 10000)
+        && isValidOptionalString(data, 'judicialCareer', 10000)
+        && isValidBoundedList(data, 'researchInterests', 30)
+        && isValidOptionalString(data, 'academicContributions', 10000)
+        && isValidOptionalString(data, 'achievements', 10000)
+        && isValidOptionalString(data, 'profileImageUrl', 1000)
+        && data.keys().hasAll(['id', 'fullName', 'headline', 'biography', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'fullName', 'headline', 'biography', 'academicBackground',
+          'professionalExperience', 'judicialCareer', 'researchInterests',
+          'academicContributions', 'achievements', 'profileImageUrl', 'updatedAt'
+        ]);
+    }
+
+    function isValidSiteSettings(data) {
+      return data.id is string && isValidId(data.id)
+        && data.siteName is string && data.siteName.size() >= 1 && data.siteName.size() <= 120
+        && data.tagline is string && data.tagline.size() <= 200
+        && data.newsletterEnabled is bool
+        && data.contactFormEnabled is bool
+        && (data.maxUploadSizeMb is int || data.maxUploadSizeMb is float) && data.maxUploadSizeMb >= 1 && data.maxUploadSizeMb <= 100
+        && data.updatedAt is timestamp
+        && isValidOptionalString(data, 'heroTitle', 200)
+        && isValidOptionalString(data, 'heroSubtitle', 600)
+        && isValidOptionalString(data, 'welcomeMessage', 2000)
+        && isValidOptionalString(data, 'logoUrl', 1000)
+        && isValidOptionalString(data, 'faviconUrl', 1000)
+        && isValidOptionalString(data, 'contactEmail', 200)
+        && isValidOptionalString(data, 'contactOffice', 400)
+        && (!( 'socialLinks' in data ) || data.socialLinks is map)
+        && isValidBoundedList(data, 'homepageSections', 20)
+        && isValidOptionalString(data, 'defaultSeoTitle', 160)
+        && isValidOptionalString(data, 'defaultSeoDescription', 320)
+        && isValidOptionalString(data, 'footerText', 600)
+        && isValidOptionalString(data, 'privacyPolicy', 30000)
+        && isValidOptionalString(data, 'disclaimer', 10000)
+        && isValidOptionalString(data, 'termsAndConditions', 30000)
+        && isValidOptionalNumber(data, 'inactivityTimeoutMinutes')
+        && data.keys().hasAll(['id', 'siteName', 'tagline', 'newsletterEnabled', 'contactFormEnabled', 'maxUploadSizeMb', 'updatedAt'])
+        && data.keys().hasOnly([
+          'id', 'siteName', 'tagline', 'heroTitle', 'heroSubtitle', 'welcomeMessage',
+          'logoUrl', 'faviconUrl', 'contactEmail', 'contactOffice', 'socialLinks',
+          'homepageSections', 'newsletterEnabled', 'contactFormEnabled', 'maxUploadSizeMb',
+          'defaultSeoTitle', 'defaultSeoDescription', 'footerText', 'privacyPolicy',
+          'disclaimer', 'termsAndConditions', 'inactivityTimeoutMinutes', 'updatedAt'
+        ]);
+    }
+
+    // ------------------------------------------------------------------
+    // Connection Test Document (non-sensitive ping)
+    // ------------------------------------------------------------------
+    match /test/connection {
+      allow get: if true;
+    }
+
+    // ------------------------------------------------------------------
+    // 1. Admins Collection (Strict RBAC)
+    // ------------------------------------------------------------------
+    match /admins/{adminId} {
+      allow get: if isValidId(adminId) && (isAdmin() || (isVerifiedUser() && request.auth.uid == adminId));
+      allow list: if isAdmin();
+      allow create: if isSignedIn() && isValidId(adminId)
+        && incoming().uid == adminId
+        && incoming().role == 'super_admin'
+        && incoming().email is string && incoming().email.size() <= 200
+        && incoming().displayName is string && incoming().displayName.size() <= 120
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && incoming().keys().hasAll(['uid', 'email', 'displayName', 'role', 'createdAt', 'updatedAt'])
+        && incoming().keys().hasOnly(['uid', 'email', 'displayName', 'role', 'inactivityTimeoutMinutes', 'createdAt', 'updatedAt'])
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(adminId)
+        && incoming().uid == existing().uid
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().role == 'super_admin'
+        && incoming().keys().hasOnly(['uid', 'email', 'displayName', 'role', 'inactivityTimeoutMinutes', 'createdAt', 'updatedAt'])
+        && isAdmin();
+      allow delete: if isValidId(adminId) && isAdmin() && request.auth.uid != adminId;
+    }
+
+    // ------------------------------------------------------------------
+    // 2. Profiles Collection (Public Bio, Admin Write)
+    // ------------------------------------------------------------------
+    match /profiles/{profileId} {
+      allow get: if isValidId(profileId);
+      allow list: if resource.data.id is string;
+      allow create: if isSignedIn() && isValidId(profileId)
+        && isValidProfile(incoming())
+        && incoming().id == profileId
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(profileId)
+        && isValidProfile(incoming())
+        && incoming().id == existing().id
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(profileId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 3. Articles
+    // ------------------------------------------------------------------
+    match /articles/{articleId} {
+      allow get: if isValidId(articleId) && (resource.data.status == 'published' || isAdmin());
+      allow list: if resource.data.status == 'published' || isAdmin();
+      allow create: if isSignedIn() && isValidId(articleId)
+        && isValidArticle(incoming())
+        && incoming().id == articleId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(articleId)
+        && isValidArticle(incoming())
+        && incoming().id == existing().id
+        && incoming().authorId == existing().authorId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(articleId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 4. Research Papers
+    // ------------------------------------------------------------------
+    match /research_papers/{paperId} {
+      allow get: if isValidId(paperId) && (resource.data.status == 'published' || isAdmin());
+      allow list: if resource.data.status == 'published' || isAdmin();
+      allow create: if isSignedIn() && isValidId(paperId)
+        && isValidResearchPaper(incoming())
+        && incoming().id == paperId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(paperId)
+        && isValidResearchPaper(incoming())
+        && incoming().id == existing().id
+        && incoming().authorId == existing().authorId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(paperId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 5. Case Laws
+    // ------------------------------------------------------------------
+    match /case_laws/{caseLawId} {
+      allow get: if isValidId(caseLawId) && (resource.data.status == 'published' || isAdmin());
+      allow list: if resource.data.status == 'published' || isAdmin();
+      allow create: if isSignedIn() && isValidId(caseLawId)
+        && isValidCaseLaw(incoming())
+        && incoming().id == caseLawId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(caseLawId)
+        && isValidCaseLaw(incoming())
+        && incoming().id == existing().id
+        && incoming().authorId == existing().authorId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(caseLawId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 6. Judgments
+    // ------------------------------------------------------------------
+    match /judgments/{judgmentId} {
+      allow get: if isValidId(judgmentId) && (resource.data.status == 'published' || isAdmin());
+      allow list: if resource.data.status == 'published' || isAdmin();
+      allow create: if isSignedIn() && isValidId(judgmentId)
+        && isValidJudgment(incoming())
+        && incoming().id == judgmentId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(judgmentId)
+        && isValidJudgment(incoming())
+        && incoming().id == existing().id
+        && incoming().authorId == existing().authorId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(judgmentId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 7. Presentations
+    // ------------------------------------------------------------------
+    match /presentations/{presentationId} {
+      allow get: if isValidId(presentationId) && (resource.data.status == 'published' || isAdmin());
+      allow list: if resource.data.status == 'published' || isAdmin();
+      allow create: if isSignedIn() && isValidId(presentationId)
+        && isValidPresentation(incoming())
+        && incoming().id == presentationId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(presentationId)
+        && isValidPresentation(incoming())
+        && incoming().id == existing().id
+        && incoming().authorId == existing().authorId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(presentationId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 8. Lectures
+    // ------------------------------------------------------------------
+    match /lectures/{lectureId} {
+      allow get: if isValidId(lectureId) && (resource.data.status == 'published' || isAdmin());
+      allow list: if resource.data.status == 'published' || isAdmin();
+      allow create: if isSignedIn() && isValidId(lectureId)
+        && isValidLectureOrResource(incoming())
+        && incoming().id == lectureId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(lectureId)
+        && isValidLectureOrResource(incoming())
+        && incoming().id == existing().id
+        && incoming().authorId == existing().authorId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(lectureId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 9. Educational Resources
+    // ------------------------------------------------------------------
+    match /resources/{resourceId} {
+      allow get: if isValidId(resourceId) && (resource.data.status == 'published' || isAdmin());
+      allow list: if resource.data.status == 'published' || isAdmin();
+      allow create: if isSignedIn() && isValidId(resourceId)
+        && isValidLectureOrResource(incoming())
+        && incoming().id == resourceId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(resourceId)
+        && isValidLectureOrResource(incoming())
+        && incoming().id == existing().id
+        && incoming().authorId == existing().authorId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(resourceId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 10. Categories & 11. Tags
+    // ------------------------------------------------------------------
+    match /categories/{categoryId} {
+      allow get: if isValidId(categoryId) && (resource.data.isActive == true || isAdmin());
+      allow list: if resource.data.isActive == true || isAdmin();
+      allow create: if isSignedIn() && isValidId(categoryId)
+        && isValidCategory(incoming())
+        && incoming().id == categoryId
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(categoryId)
+        && isValidCategory(incoming())
+        && incoming().id == existing().id
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(categoryId) && isAdmin();
+    }
+
+    match /tags/{tagId} {
+      allow get: if isValidId(tagId);
+      allow list: if resource.data.id is string;
+      allow create: if isSignedIn() && isValidId(tagId)
+        && isValidTag(incoming())
+        && incoming().id == tagId
+        && incoming().createdAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(tagId)
+        && isValidTag(incoming())
+        && incoming().id == existing().id
+        && incoming().createdAt == existing().createdAt
+        && isAdmin();
+      allow delete: if isValidId(tagId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 12. Media Assets
+    // ------------------------------------------------------------------
+    match /media/{mediaId} {
+      allow get: if isValidId(mediaId) && (resource.data.visibility == 'public' || isAdmin());
+      allow list: if resource.data.visibility == 'public' || isAdmin();
+      allow create: if isSignedIn() && isValidId(mediaId)
+        && isValidMedia(incoming())
+        && incoming().id == mediaId
+        && incoming().createdAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(mediaId)
+        && isValidMedia(incoming())
+        && incoming().id == existing().id
+        && incoming().createdAt == existing().createdAt
+        && isAdmin();
+      allow delete: if isValidId(mediaId) && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 13. Subscribers (PII Isolated: Create Only for Public, Admin Full)
+    // ------------------------------------------------------------------
+    match /subscribers/{subscriberId} {
+      allow get, list, update, delete: if isAdmin();
+      allow create: if isValidId(subscriberId)
+        && isValidSubscriber(incoming())
+        && incoming().id == subscriberId
+        && incoming().status == 'active'
+        && incoming().createdAt == request.time;
+    }
+
+    // ------------------------------------------------------------------
+    // 14. Contact Messages (PII Isolated: Create Only for Public, Admin Full)
+    // ------------------------------------------------------------------
+    match /contact_messages/{messageId} {
+      allow get, list, delete: if isAdmin();
+      allow create: if isValidId(messageId)
+        && isValidContactMessage(incoming())
+        && incoming().id == messageId
+        && incoming().createdAt == request.time;
+      allow update: if isSignedIn() && isValidId(messageId)
+        && incoming().id == existing().id
+        && incoming().createdAt == existing().createdAt
+        && incoming().status in ['unread', 'read', 'archived']
+        && incoming().diff(existing()).affectedKeys().hasOnly(['status'])
+        && isAdmin();
+    }
+
+    // ------------------------------------------------------------------
+    // 15. Analytics (Public write-only valid telemetry event, Admin read)
+    // ------------------------------------------------------------------
+    match /analytics/{eventId} {
+      allow get, list, delete: if isAdmin();
+      allow create: if isValidId(eventId)
+        && isValidAnalyticsEvent(incoming())
+        && incoming().id == eventId
+        && incoming().createdAt == request.time;
+      allow update: if false;
+    }
+
+    // ------------------------------------------------------------------
+    // 16. Activity Logs (Admin Only, Append-Only)
+    // ------------------------------------------------------------------
+    match /activity_logs/{logId} {
+      allow get, list: if isAdmin();
+      allow create: if isSignedIn() && isValidId(logId)
+        && incoming().id == logId
+        && incoming().actorUid == request.auth.uid
+        && incoming().action is string && incoming().action.size() <= 120
+        && incoming().summary is string && incoming().summary.size() <= 500
+        && incoming().createdAt == request.time
+        && isValidOptionalString(incoming(), 'actorEmail', 200)
+        && isValidOptionalString(incoming(), 'targetCollection', 80)
+        && isValidOptionalString(incoming(), 'targetId', 128)
+        && incoming().keys().hasAll(['id', 'actorUid', 'action', 'summary', 'createdAt'])
+        && incoming().keys().hasOnly(['id', 'actorUid', 'actorEmail', 'action', 'targetCollection', 'targetId', 'summary', 'createdAt'])
+        && isAdmin();
+      allow update, delete: if false;
+    }
+
+    // ------------------------------------------------------------------
+    // 17. Content Revisions (Admin Only)
+    // ------------------------------------------------------------------
+    match /revisions/{revisionId} {
+      allow get, list, delete: if isAdmin();
+      allow create: if isSignedIn() && isValidId(revisionId)
+        && incoming().id == revisionId
+        && incoming().collectionName is string && incoming().collectionName.size() <= 80
+        && incoming().documentId is string && incoming().documentId.size() <= 128
+        && incoming().snapshot is map
+        && incoming().savedByUid == request.auth.uid
+        && incoming().createdAt == request.time
+        && isValidOptionalString(incoming(), 'title', 260)
+        && incoming().keys().hasAll(['id', 'collectionName', 'documentId', 'snapshot', 'savedByUid', 'createdAt'])
+        && incoming().keys().hasOnly(['id', 'collectionName', 'documentId', 'title', 'snapshot', 'savedByUid', 'createdAt'])
+        && isAdmin();
+      allow update: if false;
+    }
+
+    // ------------------------------------------------------------------
+    // 18. Site Settings (Public Read, Admin Write)
+    // ------------------------------------------------------------------
+    match /site_settings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if resource.data.id is string;
+      allow create: if isSignedIn() && isValidId(settingId)
+        && isValidSiteSettings(incoming())
+        && incoming().id == settingId
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow update: if isSignedIn() && isValidId(settingId)
+        && isValidSiteSettings(incoming())
+        && incoming().id == existing().id
+        && incoming().updatedAt == request.time
+        && isAdmin();
+      allow delete: if isValidId(settingId) && isAdmin();
+    }
+  }
+}

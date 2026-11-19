@@ -1,0 +1,1320 @@
+# MASTER DEVELOPMENT PROMPT
+# JAMEEL KHAN
+## LEGAL RESEARCH & PUBLICATIONS PORTAL
+
+Act as a senior full-stack software architect, UI/UX designer, database engineer, cybersecurity specialist, CMS developer and API architect.
+
+Your task is to design, develop, test and deploy a complete, production-ready legal research and publications website under the brand:
+
+**JAMEEL KHAN**
+
+**Tagline:** Legal Research & Publications
+
+The website will serve as a professional digital platform for publishing and organizing legal research, case laws, judgments, articles, academic papers, presentations, lectures and other legal educational resources.
+
+This must be a fully functional dynamic web application, not a static website or a simple landing page.
+
+The website must include a complete Content Management System (CMS), a secure private Admin Dashboard, database integration, document management, advanced search and a scalable backend API for a future Android application.
+
+==================================================
+1. PROJECT CONFIGURATION
+==================================================
+
+Website Name: Jameel Khan
+
+Website Title: Jameel Khan | Legal Research & Publications
+
+Primary Language: English
+
+Development Platform: Google AI Studio
+
+Publishing Authority: Only Jameel Khan
+
+Website Type: Professional Legal Research & Academic Publications Portal
+
+Target Audience:
+- Judges
+- Lawyers
+- Advocates
+- Law Students
+- Legal Researchers
+- Academicians
+- Judicial Officers
+- General Public interested in legal research
+
+Primary Purpose:
+To provide a centralized digital platform where legal knowledge, judicial research, legal articles, case laws, judgments and educational resources can be published, accessed, searched, read and downloaded.
+
+IMPORTANT:
+The website must not falsely represent itself as an official court website or an official government portal. It is a personal professional research and publications platform.
+
+==================================================
+2. TECHNOLOGY STACK
+==================================================
+
+Use a modern, reliable and scalable technology stack.
+
+Frontend:
+- React.js with TypeScript
+- Modern component-based architecture
+- Tailwind CSS
+- Responsive UI
+- Lucide Icons
+- Rich Text Editor using TipTap or an equivalent mature editor
+
+Backend:
+- Firebase Authentication
+- Cloud Firestore Database
+- Firebase Storage
+- Firebase Cloud Functions
+- Firebase Hosting or an appropriate Google Cloud deployment environment
+
+API:
+- REST API architecture
+- Versioned API endpoints starting with /api/v1/
+- JSON-based responses
+- Secure authentication
+- Future Android application compatibility
+
+SEO:
+- Search engine optimized pages
+- Dynamic page titles
+- Meta descriptions
+- Open Graph metadata
+- XML Sitemap
+- Robots.txt
+- Canonical URLs
+- Structured data where appropriate
+
+Use Firebase services securely. Never expose Firebase Admin SDK credentials, private API keys or service account credentials in frontend code.
+
+Keep the application modular and maintainable.
+
+==================================================
+3. WEBSITE BRANDING AND UI/UX DESIGN
+==================================================
+
+Create an elegant, sophisticated, academic and professional design.
+
+The website should resemble a premium international legal research journal or academic publication portal.
+
+Design Direction:
+
+Primary Colors:
+- Deep Navy Blue
+- White
+- Dark Green as a secondary accent
+- Subtle Gold accents
+
+Visual Style:
+- Clean and minimal
+- Professional typography
+- Spacious layouts
+- Elegant cards
+- Clear navigation
+- Subtle shadows
+- Consistent spacing
+- Modern icons
+- Smooth but restrained transitions
+
+Avoid:
+- Excessive animations
+- Flashy gradients
+- Overcrowded layouts
+- Unnecessary decorative elements
+- Large distracting banners
+
+Typography:
+Use professional readable fonts such as Inter, Source Sans 3 or another suitable academic font.
+
+The entire interface must be in English.
+
+Responsive Requirements:
+The website must work perfectly on:
+- Desktop computers
+- Laptops
+- Tablets
+- Android mobile phones
+- iPhones
+
+Mobile users must be able to navigate, read articles, search judgments, view PDFs and download resources comfortably.
+
+==================================================
+4. PUBLIC WEBSITE STRUCTURE
+==================================================
+
+Create the following pages and navigation menus.
+
+A. HOME
+
+The homepage must contain:
+
+1. Professional header with website logo/name.
+2. Main navigation bar.
+3. Hero section introducing Jameel Khan Legal Research & Publications.
+4. Short introduction and welcome message.
+5. Featured Research Papers.
+6. Latest Legal Articles.
+7. Recent Judgments.
+8. Latest Case Laws.
+9. Featured Presentations.
+10. Popular Publications.
+11. Browse by Categories.
+12. Search bar.
+13. About the Author section.
+14. Newsletter subscription section, if enabled.
+15. Professional footer.
+
+All homepage content must be dynamically loaded from the database.
+
+The administrator must be able to control featured items, homepage sections and their display order.
+
+B. ABOUT
+
+Create a professional profile page.
+
+Sections:
+- Professional Biography
+- Academic Background
+- Professional Experience
+- Judicial Career
+- Research Interests
+- Publications
+- Academic Contributions
+- Professional Achievements
+
+All information and profile photographs must be editable from the Admin Dashboard.
+
+Do not invent educational qualifications, judicial appointments, awards or professional achievements. Use administrator-provided information only.
+
+C. LEGAL ARTICLES
+
+Create a dedicated article library.
+
+Features:
+- Article listing
+- Article thumbnails
+- Article titles
+- Publication dates
+- Author information
+- Short descriptions
+- Categories
+- Tags
+- Reading time
+- Featured articles
+- Pagination
+
+Article detail page must contain:
+- Article title
+- Cover image
+- Publication date
+- Author name
+- Category
+- Full article content
+- Headings and subheadings
+- Images
+- Tables
+- Footnotes
+- References
+- Related articles
+- Share buttons
+- Print option
+- PDF export or download where enabled
+
+D. RESEARCH PAPERS
+
+Create a dedicated academic research section.
+
+Each research paper should support:
+
+- Research title
+- Abstract
+- Keywords
+- Research category
+- Publication date
+- Author
+- Full research text
+- Introduction
+- Research methodology
+- Analysis
+- Findings
+- Conclusion
+- References and bibliography
+- PDF attachment
+- Download button
+
+Provide a professional academic reading layout.
+
+E. CASE LAWS
+
+Create an organized case law database.
+
+Each case law record must support:
+
+- Case title
+- Case number
+- Court name
+- Case citation
+- Relevant year
+- Bench or judge details, if provided
+- Subject matter
+- Legal principles
+- Relevant statutory provisions
+- Headnotes
+- Important observations
+- Related judgments
+- PDF attachment
+- External source link
+
+Provide advanced filtering by:
+- Court
+- Year
+- Subject
+- Citation
+- Legal provision
+- Case title
+
+F. JUDGMENTS
+
+Create a separate judgment repository.
+
+Each judgment should include:
+
+- Case title
+- Case number
+- Court
+- Judgment date
+- Case citation
+- Subject
+- Short summary
+- Legal issues
+- Final decision or operative outcome, if provided
+- Full judgment PDF
+- Related case laws
+
+Provide a searchable and downloadable judgment library.
+
+G. PRESENTATIONS
+
+Create a dedicated presentation library.
+
+Support:
+- PowerPoint PPT
+- PPTX
+- PDF
+- Other permitted educational documents
+
+Each presentation must include:
+- Presentation title
+- Description
+- Topic
+- Publication date
+- Thumbnail
+- File size
+- File type
+- Download option
+- Related articles
+
+H. LECTURES & EDUCATIONAL RESOURCES
+
+Create a section for:
+- Lecture Notes
+- Training Materials
+- Seminar Papers
+- Workshop Resources
+- Legal Guidelines
+- Academic Handouts
+
+I. PUBLICATIONS ARCHIVE
+
+Create a centralized archive containing all published material.
+
+Allow filtering by:
+- Content type
+- Year
+- Category
+- Topic
+- Keywords
+
+J. CONTACT
+
+Create a professional contact page.
+
+Include only administrator-approved contact information.
+
+Provide an optional contact form with spam protection and secure submission.
+
+==================================================
+5. COMPLETE ADMIN DASHBOARD
+==================================================
+
+This is one of the most important parts of the project.
+
+Develop a secure, private and easy-to-use Admin Dashboard.
+
+Only Jameel Khan is authorized to publish, edit, delete or manage website content.
+
+There must be no public registration option.
+
+Admin login must be accessible through a separate URL, such as:
+
+/admin/login
+
+After successful authentication, redirect the administrator to:
+
+/admin/dashboard
+
+Dashboard Design:
+
+Create a modern administrative interface with a sidebar navigation and a responsive mobile layout.
+
+Dashboard Overview:
+
+Display:
+- Total Published Articles
+- Total Research Papers
+- Total Case Laws
+- Total Judgments
+- Total Presentations
+- Total Drafts
+- Total Downloads
+- Website Visitors, where reliable analytics are configured
+
+Include recent activity and quick-action buttons.
+
+Quick Actions:
+- Write New Article
+- Add Research Paper
+- Upload Judgment
+- Add Case Law
+- Upload Presentation
+- Manage Publications
+
+==================================================
+6. ADVANCED PUBLISHING CMS
+==================================================
+
+Develop a complete CMS that allows the administrator to publish content without any coding knowledge.
+
+The publishing interface must be simple enough to use like Microsoft Word.
+
+A. CREATE NEW ARTICLE
+
+Create a dedicated article editor.
+
+Fields:
+
+1. Article Title
+2. URL Slug (automatically generated, editable)
+3. Short Description
+4. Main Content
+5. Featured Image
+6. Category
+7. Tags
+8. Publication Date
+9. Author Name
+10. SEO Title
+11. SEO Description
+12. Keywords
+13. Related Publications
+
+B. RICH TEXT EDITOR
+
+The editor must support:
+
+- Bold
+- Italic
+- Underline
+- Strikethrough
+- Headings H1, H2, H3 and H4
+- Paragraphs
+- Numbered Lists
+- Bullet Lists
+- Block Quotes
+- Tables
+- Images
+- Hyperlinks
+- Text Alignment
+- Indentation
+- Horizontal Lines
+- Footnotes
+- Superscript
+- Subscript
+- Undo
+- Redo
+- Copy and Paste
+
+The editor must support professional academic and legal writing.
+
+Provide an intuitive toolbar.
+
+C. AUTOMATIC SAVING
+
+Implement automatic draft saving.
+
+Requirements:
+- Save content periodically.
+- Save when the editor loses focus.
+- Display saving status.
+- Display last saved time.
+- Prevent accidental data loss.
+- Restore the latest saved draft after an unexpected browser closure.
+
+D. PUBLISHING OPTIONS
+
+Provide the following buttons:
+
+- Save Draft
+- Preview
+- Publish Now
+- Schedule Publication
+- Update Published Content
+- Unpublish
+
+Before publishing, validate all required fields.
+
+E. CONTENT MANAGEMENT
+
+Administrator must be able to:
+- View all content
+- Search content
+- Filter by category
+- Filter by status
+- Edit content
+- Delete content
+- Restore deleted content if supported
+- Duplicate an existing article
+- Change publication status
+- Feature or unfeature content
+
+Use a confirmation dialog before permanent deletion.
+
+F. OTHER PUBLISHING MODULES
+
+Create separate but consistent publishing forms for:
+
+- Research Papers
+- Case Laws
+- Judgments
+- Presentations
+- Lecture Notes
+- Educational Resources
+
+Each form must contain relevant metadata and file upload controls.
+
+==================================================
+7. DOCUMENT AND FILE MANAGEMENT
+==================================================
+
+Use Firebase Storage for file storage.
+
+Support:
+- PDF
+- DOC
+- DOCX
+- PPT
+- PPTX
+- JPG
+- JPEG
+- PNG
+- WebP
+
+Requirements:
+
+1. Upload files directly from the Admin Dashboard.
+2. Show upload progress.
+3. Display uploaded file details.
+4. Allow replacing an attachment.
+5. Allow deleting unused files.
+6. Generate secure file references.
+7. Display file size and file type.
+8. Support PDF preview.
+9. Allow downloading authorized public publications.
+10. Validate file extensions, actual file types and maximum file size.
+
+Set configurable upload limits.
+
+Do not allow executable files or unsafe file types.
+
+Publications marked as published may be accessed by public visitors. Draft and private attachments must never be publicly accessible.
+
+Use appropriate Firebase Storage security rules.
+
+==================================================
+8. ADVANCED SEARCH ENGINE
+==================================================
+
+Develop a powerful website-wide search engine.
+
+The search box must be accessible from the homepage and main navigation.
+
+Search across:
+- Articles
+- Research Papers
+- Case Laws
+- Judgments
+- Presentations
+- Lecture Notes
+
+Search should support:
+- Title
+- Keywords
+- Categories
+- Tags
+- Citation
+- Case number
+- Court name
+- Publication year
+- Content descriptions
+
+Provide:
+- Search suggestions
+- Search results page
+- Category filters
+- Year filters
+- Relevance sorting
+- Latest-first sorting
+- Pagination
+
+Use an appropriate indexing solution if Firestore queries alone are insufficient.
+
+Do not claim full-text search capabilities unless the required indexing infrastructure has actually been implemented.
+
+==================================================
+9. DATABASE ARCHITECTURE
+==================================================
+
+Use Cloud Firestore with a properly structured and scalable database.
+
+Create the following collections:
+
+1. admins
+2. profiles
+3. articles
+4. research_papers
+5. case_laws
+6. judgments
+7. presentations
+8. lectures
+9. resources
+10. categories
+11. tags
+12. media
+13. subscribers
+14. contact_messages
+15. analytics
+16. activity_logs
+17. revisions
+18. site_settings
+
+Every content record should have appropriate fields, including:
+
+- id
+- title
+- slug
+- description
+- content
+- categoryId
+- tags
+- featuredImage
+- attachments
+- authorId
+- authorName
+- status
+- isFeatured
+- createdAt
+- updatedAt
+- publishedAt
+- seoTitle
+- seoDescription
+
+Add specialized fields for each content type.
+
+Use timestamps, document references and appropriate data types.
+
+Create the necessary Firestore indexes.
+
+Avoid duplicate records and inconsistent data.
+
+Use pagination instead of loading the entire database.
+
+==================================================
+10. SECURITY AND AUTHENTICATION
+==================================================
+
+Security is mandatory.
+
+The website must have only one authorized administrator account initially.
+
+Administrator:
+Jameel Khan
+
+Requirements:
+
+1. Firebase Authentication.
+2. Secure email and password login.
+3. Password reset.
+4. Optional multi-factor authentication.
+5. No public signup.
+6. No public admin registration.
+7. Protected admin routes.
+8. Secure session management.
+9. Automatic logout after configurable inactivity.
+10. Rate limiting for sensitive operations.
+11. Secure server-side validation.
+12. Firebase App Check where applicable.
+13. Activity logging.
+14. Protection against XSS, CSRF where applicable, and injection attacks.
+15. Strict database security rules.
+16. Strict storage security rules.
+
+IMPORTANT SECURITY RULES:
+
+- Only the authenticated and explicitly authorized administrator may create content.
+- Only the authorized administrator may update or delete content.
+- Public visitors may read published content only.
+- Public visitors must never read drafts.
+- Public visitors must never access private admin information.
+- Public visitors must never access private attachments.
+- Public users must not be able to change administrator roles.
+- Admin privileges must never depend on a client-side role value alone.
+
+Implement administrator authorization through trusted server-side claims or an equivalent secure authorization mechanism.
+
+Create secure Firestore and Storage rules.
+
+Do not hardcode administrator passwords in source code.
+
+Provide an initial secure administrator provisioning procedure.
+
+==================================================
+11. CONTENT CATEGORIES
+==================================================
+
+Create an administrator-controlled category management system.
+
+Suggested default categories:
+
+- Constitutional Law
+- Criminal Law
+- Civil Law
+- Family Law
+- Service Law
+- Administrative Law
+- Human Rights
+- Islamic Law
+- Evidence Law
+- Procedural Law
+- Judicial Administration
+- Legal Education
+- International Law
+- Academic Research
+- Miscellaneous
+
+Allow the administrator to:
+- Create categories
+- Rename categories
+- Edit descriptions
+- Assign icons
+- Change display order
+- Activate or deactivate categories
+- Delete unused categories
+
+==================================================
+12. PUBLICATION READING EXPERIENCE
+==================================================
+
+The reading experience must be excellent.
+
+Article pages must have:
+- Clean typography
+- Comfortable reading width
+- Proper line spacing
+- Clear heading hierarchy
+- Table of contents for long articles
+- Reading progress indicator
+- Estimated reading time
+- Print-friendly layout
+- Share functionality
+- Related content
+
+PDFs must open in an integrated viewer where technically supported.
+
+Readers should be able to:
+- Zoom
+- Navigate pages
+- Search within the PDF if supported
+- Download the document
+- Open in a new tab
+
+Ensure compatibility with mobile browsers.
+
+==================================================
+13. SHARING AND DOWNLOAD FEATURES
+==================================================
+
+Add sharing options for:
+- WhatsApp
+- Facebook
+- LinkedIn
+- Email
+- Copy Link
+
+Generate clean and permanent URLs for every publication.
+
+Example:
+
+/articles/example-article
+
+/research/example-research-paper
+
+/case-laws/example-case
+
+/judgments/example-judgment
+
+/presentations/example-presentation
+
+All URLs must be SEO friendly.
+
+==================================================
+14. FUTURE ANDROID APPLICATION API
+==================================================
+
+Design the backend from the beginning to support a future Android application.
+
+The Android app must use the same backend, database and published content.
+
+Do not create a separate database for the future app.
+
+Develop versioned REST API endpoints.
+
+Suggested endpoints:
+
+PUBLIC ENDPOINTS:
+
+GET /api/v1/home
+
+GET /api/v1/profile
+
+GET /api/v1/articles
+
+GET /api/v1/articles/{slug}
+
+GET /api/v1/research
+
+GET /api/v1/research/{slug}
+
+GET /api/v1/case-laws
+
+GET /api/v1/case-laws/{id}
+
+GET /api/v1/judgments
+
+GET /api/v1/judgments/{id}
+
+GET /api/v1/presentations
+
+GET /api/v1/presentations/{id}
+
+GET /api/v1/categories
+
+GET /api/v1/search?q={query}
+
+GET /api/v1/publications/latest
+
+ADMIN ENDPOINTS:
+
+POST /api/v1/admin/articles
+
+PUT /api/v1/admin/articles/{id}
+
+DELETE /api/v1/admin/articles/{id}
+
+POST /api/v1/admin/research
+
+POST /api/v1/admin/case-laws
+
+POST /api/v1/admin/judgments
+
+POST /api/v1/admin/presentations
+
+POST /api/v1/admin/upload
+
+All admin endpoints must require verified administrator authentication and authorization.
+
+API REQUIREMENTS:
+
+- JSON responses
+- Consistent response structure
+- HTTP status codes
+- Pagination
+- Search and filtering
+- Error handling
+- Authentication
+- Authorization
+- API versioning
+- Rate limiting
+- CORS configuration
+- Input validation
+
+Create API documentation using OpenAPI/Swagger.
+
+Ensure the API can later be consumed by a native Android application built with Kotlin and Jetpack Compose.
+
+Do not expose private administrator endpoints to public users.
+
+==================================================
+15. SEO AND GOOGLE INDEXING
+==================================================
+
+Implement professional SEO.
+
+Requirements:
+
+- Unique title for each page
+- Unique meta description
+- Clean URLs
+- Canonical URLs
+- XML sitemap
+- Robots.txt
+- Open Graph tags
+- Twitter/X cards
+- Structured data where appropriate
+- Article metadata
+- Breadcrumb navigation
+- Proper heading hierarchy
+- Image alt text
+
+Configure Google Search Console compatibility.
+
+Allow the administrator to control SEO fields for each publication.
+
+==================================================
+16. WEBSITE ANALYTICS
+==================================================
+
+Create an analytics section in the Admin Dashboard.
+
+Display, where reliable analytics are configured:
+
+- Total Visitors
+- Page Views
+- Most Viewed Articles
+- Most Downloaded Judgments
+- Popular Research Papers
+- Most Searched Keywords
+- Traffic Sources
+- Monthly Statistics
+
+Use privacy-conscious analytics.
+
+Do not fabricate visitor counts or download statistics.
+
+==================================================
+17. WEBSITE SETTINGS
+==================================================
+
+Create a complete settings module.
+
+Allow the administrator to manage:
+
+- Website Name
+- Website Logo
+- Favicon
+- Tagline
+- About Information
+- Profile Image
+- Contact Email
+- Social Media Links
+- Homepage Content
+- Footer Content
+- Default SEO Settings
+- Upload Limits
+- Publication Settings
+- Privacy Policy
+- Disclaimer
+- Terms and Conditions
+
+Changes must reflect on the public website without modifying source code.
+
+==================================================
+18. BACKUP AND DATA RECOVERY
+==================================================
+
+Implement a reliable backup strategy.
+
+Requirements:
+
+- Firestore scheduled backups
+- Storage backup strategy
+- Database export and recovery procedure
+- Content revision history
+- Recovery of accidentally edited content
+- Backup status in Admin Dashboard
+
+Do not claim backups are operational until the relevant Google Cloud backup configuration has actually been deployed and verified.
+
+==================================================
+19. ADMIN DASHBOARD MOBILE EXPERIENCE
+==================================================
+
+The administrator must be able to manage the website from a mobile phone.
+
+Ensure the following operations work smoothly on mobile:
+
+- Login
+- Write articles
+- Edit articles
+- Upload PDFs
+- Upload presentations
+- Add case laws
+- Publish judgments
+- Preview content
+- Manage categories
+- View analytics
+
+Use mobile-friendly forms, large touch targets and responsive editors.
+
+The administrator must not need a desktop computer to publish content.
+
+==================================================
+20. PERFORMANCE AND ACCESSIBILITY
+==================================================
+
+Performance requirements:
+
+- Lazy loading of images
+- Image optimization
+- Code splitting
+- Pagination
+- Efficient Firestore queries
+- Caching where appropriate
+- Optimized file delivery
+- Minimal unnecessary dependencies
+
+Accessibility:
+
+- Semantic HTML
+- Keyboard navigation
+- Accessible form labels
+- Sufficient color contrast
+- Screen reader compatibility
+- Meaningful image descriptions
+
+Target good Core Web Vitals and mobile performance.
+
+==================================================
+21. ADMINISTRATOR WORKFLOW
+==================================================
+
+The normal publishing workflow should be:
+
+STEP 1:
+Jameel Khan opens the website.
+
+STEP 2:
+He selects Admin Login.
+
+STEP 3:
+He enters his secure email and password.
+
+STEP 4:
+The dashboard opens.
+
+STEP 5:
+He selects Write New Article.
+
+STEP 6:
+He enters the article title.
+
+STEP 7:
+He writes or pastes the article in the rich text editor.
+
+STEP 8:
+He selects a category and adds relevant tags.
+
+STEP 9:
+He uploads a cover image if required.
+
+STEP 10:
+He previews the article.
+
+STEP 11:
+He clicks Publish Now.
+
+STEP 12:
+The article becomes publicly available on the website.
+
+The same workflow should apply to research papers, judgments, case laws and presentations with their respective metadata.
+
+Make this workflow as simple as possible.
+
+==================================================
+22. SAMPLE WEBSITE CONTENT
+==================================================
+
+Create professional sample content for initial testing.
+
+Examples:
+
+- Introduction to Constitutional Law
+- Principles of Natural Justice
+- Judicial Review and Administrative Action
+- Fundamental Rights under the Constitution of Pakistan
+- Principles of Evidence
+- Criminal Justice System
+- Interpretation of Statutes
+
+IMPORTANT:
+
+Sample content must be clearly identified as demonstration content.
+
+Do not fabricate actual judicial decisions, case citations, quotations, professional achievements or the judge's personal biography.
+
+The administrator must be able to remove all sample content before launch.
+
+==================================================
+23. PROJECT STRUCTURE
+==================================================
+
+Maintain a clean and modular project structure.
+
+Suggested organization:
+
+src/
+  components/
+  pages/
+  layouts/
+  admin/
+  public/
+  editor/
+  services/
+  hooks/
+  types/
+  utils/
+  styles/
+
+functions/
+  src/
+    api/
+    auth/
+    publishing/
+    uploads/
+    scheduled/
+    security/
+
+firebase/
+  firestore.rules
+  storage.rules
+  firestore.indexes.json
+
+public/
+  images/
+  icons/
+  assets/
+
+Create reusable components.
+
+Keep public pages and administrator pages logically separate.
+
+==================================================
+24. DEVELOPMENT AND IMPLEMENTATION RULES
+==================================================
+
+Follow these instructions strictly.
+
+1. Build the complete working application, not merely a UI prototype.
+2. Do not use fake login systems.
+3. Do not use localStorage as the primary database.
+4. Do not create static sample cards as a substitute for real database-driven content.
+5. Connect all publishing forms to the actual backend.
+6. Ensure all buttons perform their intended actions.
+7. Implement actual file uploads.
+8. Implement actual authentication.
+9. Implement actual content publishing.
+10. Implement real search and filtering.
+11. Protect all admin routes.
+12. Ensure public users cannot modify content.
+13. Implement loading states.
+14. Implement error handling.
+15. Display meaningful success and failure messages.
+16. Validate all inputs.
+17. Maintain consistent UI design.
+18. Test the application on desktop and mobile.
+19. Do not leave placeholder links or non-functional buttons.
+20. Do not expose secrets or privileged credentials in frontend source code.
+
+If a feature requires external configuration, clearly identify the required configuration and provide setup instructions.
+
+Never represent an unconfigured or unimplemented feature as completed.
+
+==================================================
+25. DEVELOPMENT PHASES
+==================================================
+
+Develop the application in the following order.
+
+PHASE 1: FOUNDATION
+- Initialize project
+- Configure Firebase
+- Set up database
+- Set up authentication
+- Establish project structure
+- Create responsive design system
+
+PHASE 2: PUBLIC WEBSITE
+- Homepage
+- About page
+- Articles
+- Research
+- Case laws
+- Judgments
+- Presentations
+- Resources
+- Contact
+- Footer
+
+PHASE 3: ADMIN DASHBOARD
+- Secure login
+- Dashboard overview
+- Content management
+- Rich text editor
+- File management
+- Categories
+- Website settings
+
+PHASE 4: BACKEND AND DATABASE
+- Firestore integration
+- Storage integration
+- Cloud Functions
+- Security rules
+- Publishing logic
+- Search infrastructure
+
+PHASE 5: API
+- Public API
+- Admin API
+- Authentication
+- API documentation
+- Android compatibility
+
+PHASE 6: TESTING
+- Authentication testing
+- Publishing testing
+- File upload testing
+- Search testing
+- Mobile testing
+- Security testing
+- Performance testing
+
+PHASE 7: DEPLOYMENT
+- Production build
+- Firebase deployment
+- Domain configuration
+- SSL
+- SEO configuration
+- Final quality assurance
+
+==================================================
+26. FINAL ACCEPTANCE CRITERIA
+==================================================
+
+The project will only be considered complete when:
+
+[ ] Public website is fully functional.
+
+[ ] Website is responsive on mobile and desktop.
+
+[ ] Admin login works securely.
+
+[ ] Only Jameel Khan has publishing authority.
+
+[ ] Public registration is disabled.
+
+[ ] Admin Dashboard is fully operational.
+
+[ ] Article editor works properly.
+
+[ ] Draft saving works.
+
+[ ] Article publishing works.
+
+[ ] Research paper publishing works.
+
+[ ] Case law management works.
+
+[ ] Judgment management works.
+
+[ ] Presentation uploads work.
+
+[ ] PDF viewer works.
+
+[ ] Public downloads work for published files.
+
+[ ] Search and filters work.
+
+[ ] Database is connected.
+
+[ ] Firebase security rules are deployed.
+
+[ ] File storage is secure.
+
+[ ] SEO metadata is implemented.
+
+[ ] API endpoints are implemented and documented.
+
+[ ] Future Android application compatibility is maintained.
+
+[ ] No critical errors remain.
+
+==================================================
+27. FINAL INSTRUCTION TO GOOGLE AI STUDIO
+==================================================
+
+Now begin building the complete JAMEEL KHAN Legal Research & Publications Portal.
+
+Work as a professional development team.
+
+First, inspect the requirements and establish the complete application architecture.
+
+Then implement the actual frontend, backend, database, authentication, publishing CMS and API.
+
+Do not stop after creating the homepage or visual design.
+
+Do not replace backend functionality with dummy data.
+
+Do not skip security configuration.
+
+Do not create a website that only looks functional. Build a genuinely working application.
+
+If the project is too large for one generation, divide development into manageable phases while maintaining the same architecture, database schema, design system and coding standards.
+
+After each phase:
+- Verify the code.
+- Test implemented functionality.
+- Fix errors.
+- Preserve existing working features.
+- Continue to the next phase.
+
+Do not overwrite working modules unnecessarily.
+
+Before declaring completion, provide:
+
+1. Project architecture.
+2. Database structure.
+3. Firebase setup instructions.
+4. Admin account provisioning instructions.
+5. Security rules.
+6. Deployment instructions.
+7. API documentation.
+8. Testing report.
+9. Known limitations, if any.
+
+**FINAL GOAL:**
+
+Deliver a premium, professional, secure, fully functional and mobile-friendly legal research and publications platform under the name:
+
+# JAMEEL KHAN
+## Legal Research & Publications
+
+The platform must make it extremely easy for Jameel Khan to publish his legal research, articles, judgments, case laws, presentations and educational materials independently, without requiring technical knowledge or developer assistance.
